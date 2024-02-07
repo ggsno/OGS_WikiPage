@@ -1,30 +1,36 @@
-# React + TypeScript + Vite
+# 코딩허브 프론트엔드 채용 과제
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 실행 방법
 
-Currently, two official plugins are available:
+```bash
+# node v18.18.0
+# yarn v1.22.18
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+yarn install
+yarn dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## 구현 사항
+
+### 메인페이지 및 위키페이지 가져오기
+
+- [ ] 처음페이지에서는 여러개의 위키페이지제목이 목록으로 나옵니다.
+- [ ] 위키페이지는 제목과 본문으로 구성되며 각각 텍스트 입니다.
+- [ ] 위키페이지 제목을 클릭하면 제목과 본문을 볼 수 있습니다.
+
+### 페이지네이션
+
+- [ ] 처음페이지에 목록으로 보여지는 제목의 갯수는 5개이며, 5개가 넘어가면 페이지를 구분해서 표시합니다.
+
+### 위키 추가, 수정
+
+- [ ] 메인페이지에서 추가 버튼을 누르면 새로이 입력할 수 있는 창이 나오고, 제목과 내용을 입력할 수 있습니다.
+- [ ] 위키내용페이지에는 수정 버튼이 있고, 수정을 누르면 내용을 수정해서 저장할 수 있습니다.
+
+### 위키 내용에 따른 자동 링크
+
+- [ ] 위키페이지 본문에 다른 위키페이지의 제목이 있으면 자동으로 링크가 걸리고,클릭하면 해당 위키페이지로 이동합니다.
+
+## 기타
+
+- API 모킹을 위해 MSW 사용
