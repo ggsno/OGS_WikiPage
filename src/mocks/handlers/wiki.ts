@@ -99,6 +99,53 @@ const mockWikis = [
   },
 ];
 
+type Dictionary = { [key: string]: string[] };
+
+const titleDictionary = (() => {
+  const hasIndex = (dictionary: Dictionary, index: string) => {
+    return dictionary[index];
+  };
+
+  const isDuplicated = (dictionary: Dictionary, newWord: string) => {
+    const index = newWord[0];
+    if (!hasIndex(dictionary, index)) return false;
+    return dictionary[index].includes(newWord);
+  };
+
+  const addNewTitle = (dictionary: Dictionary, newWord: string) => {
+    const index = newWord[0];
+
+    if (isDuplicated(dictionary, newWord)) {
+      return dictionary;
+    }
+
+    if (hasIndex(dictionary, index)) {
+      return {
+        ...dictionary,
+        [index]: [...dictionary[index], newWord].sort(
+          (a, b) => b.length - a.length
+        ),
+      };
+    }
+
+    return { ...dictionary, [index]: [newWord] };
+  };
+
+  let dict = mockWikis.reduce<Dictionary>((acc, { title }) => {
+    return addNewTitle(acc, title);
+  }, {});
+
+  const getDict = () => ({ ...dict });
+
+  const setNewTitle = (newTitle: string) =>
+    (dict = addNewTitle(dict, newTitle));
+
+  return {
+    getDict,
+    setNewTitle,
+  };
+})();
+
 const handlers: HttpHandler[] = [
   http.get("/wikis", async ({ request }) => {
     const ITEM_COUNT_PER_PAGE = 5;
@@ -138,7 +185,25 @@ const handlers: HttpHandler[] = [
         { status: 404 }
       );
 
-    return HttpResponse.json(wiki);
+    const dict = titleDictionary.getDict();
+
+    const titles = wiki.content.split("").reduce<string[]>((acc, cur, i) => {
+      if (i !== 0 && wiki.content[i - 1] !== " ") return acc;
+
+      const comps = dict[cur];
+
+      if (!comps) return acc;
+
+      const title = comps.find(
+        (comp) => comp === wiki.content.slice(i, i + comp.length)
+      );
+
+      if (!title) return acc;
+
+      return [...acc, title];
+    }, []);
+
+    return HttpResponse.json({ ...wiki, containedTitles: titles });
   }),
 
   http.post<object, { title: string; content: string }>(
@@ -148,12 +213,16 @@ const handlers: HttpHandler[] = [
       if (mockWikis.some((wiki) => wiki.title === title)) {
         return new HttpResponse("이미 존재하는 제목입니다.", { status: 400 });
       }
+
       const newWiki = {
         id: String(Number(mockWikis[mockWikis.length - 1].id) + 1),
         title,
         content,
       };
+
       mockWikis.unshift(newWiki);
+      titleDictionary.setNewTitle(newWiki.title);
+
       return new HttpResponse(null, { status: 201 });
     }
   ),
