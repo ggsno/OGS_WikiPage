@@ -1,6 +1,11 @@
-import Page from "./page";
+import Page from "./Page";
+import Layout from "./Layout";
 
 export default {
   path: "/",
-  element: <Page />,
+  element: (
+    <Layout>
+      <Page />
+    </Layout>
+  ),
 };

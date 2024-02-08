@@ -31,6 +31,7 @@ const Page = AsyncBoundary(() => {
   return (
     <>
       <div>총 {totalCount.toLocaleString()}개의 위키가 있어요!</div>
+      <Link to="/wiki-editor">위키 작성하기</Link>
       {data.map(({ title }) => (
         <Fragment key={title}>
           <div>
@@ -41,15 +42,17 @@ const Page = AsyncBoundary(() => {
       {Array(Math.ceil(totalCount / ITEM_COUNT_PER_PAGE))
         .fill(0)
         .map((_, i) => i + 1)
-        .map((e) => {
+        .map((e, i) => {
           return (
-            <button
-              onClick={() => {
-                setSerachParams({ page: String(e) });
-              }}
-            >
-              {e}
-            </button>
+            <Fragment key={`pagination button ${i}`}>
+              <button
+                onClick={() => {
+                  setSerachParams({ page: String(e) });
+                }}
+              >
+                {e}
+              </button>
+            </Fragment>
           );
         })}
     </>

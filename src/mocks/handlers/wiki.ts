@@ -140,6 +140,37 @@ const handlers: HttpHandler[] = [
 
     return HttpResponse.json(wiki);
   }),
+
+  http.post<object, { title: string; content: string }>(
+    "/wikis",
+    async ({ request }) => {
+      const { title, content } = await request.json();
+      if (mockWikis.some((wiki) => wiki.title === title)) {
+        return new HttpResponse("이미 존재하는 제목입니다.", { status: 400 });
+      }
+      const newWiki = {
+        id: String(Number(mockWikis[mockWikis.length - 1].id) + 1),
+        title,
+        content,
+      };
+      mockWikis.unshift(newWiki);
+      return new HttpResponse(null, { status: 201 });
+    }
+  ),
+
+  http.put<object, { id: string; title: string; content: string }>(
+    "wikis",
+    async ({ request }) => {
+      const { id, title, content } = await request.json();
+      const index = mockWikis.findIndex((wiki) => wiki.id === id);
+      if (index === -1) {
+        return new HttpResponse("존재하지 않는 위키입니다.", { status: 400 });
+      }
+
+      mockWikis.splice(index, 1, { id, title, content });
+      return new HttpResponse(null, { status: 204 });
+    }
+  ),
 ];
 
 export default handlers;
