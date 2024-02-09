@@ -6,7 +6,7 @@ import queryClient from "../shared/tanstack-query/queryClient";
 import "./styles/global.css";
 
 if (process.env.NODE_ENV === "development") {
-  const { worker } = await import("../mocks");
+  const { worker } = await import("../../mocks");
   await worker.start();
 }
 
