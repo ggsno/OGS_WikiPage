@@ -24,7 +24,7 @@ export default function Page() {
           MenuComponent={<SaveWikiButton wiki={wiki} isEditMode={isEditMode} />}
         />
         <form>
-          <div>
+          <div className="py-4 text-3xl ">
             <input
               type="text"
               placeholder="위키 제목"
@@ -32,6 +32,7 @@ export default function Page() {
                 setWiki({ ...wiki, title: e.target.value });
               }}
               value={wiki.title}
+              className="bg-slate-50 w-full p-2"
             />
           </div>
           <div>
@@ -41,7 +42,7 @@ export default function Page() {
                 setWiki({ ...wiki, content: e.target.value });
               }}
               value={wiki.content}
-              className="w-full h-96"
+              className="w-full h-96 bg-slate-50 p-2"
             />
           </div>
         </form>

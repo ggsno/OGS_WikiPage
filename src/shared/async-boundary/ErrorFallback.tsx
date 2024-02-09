@@ -1,4 +1,5 @@
 import { FallbackProps } from "react-error-boundary";
+import Button from "../ui/Button";
 
 export default function ErrorFallback({
   error,
@@ -9,7 +10,9 @@ export default function ErrorFallback({
   return (
     <>
       <div>요청에 실패했습니다.</div>
-      <button onClick={() => resetErrorBoundary()}>재시도</button>
+      <Button variant="sub" onClick={() => resetErrorBoundary()}>
+        재시도
+      </Button>
     </>
   );
 }

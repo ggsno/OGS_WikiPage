@@ -1,5 +1,5 @@
-import axios from "axios";
 import { LoaderFunctionArgs } from "react-router-dom";
+import { getWikiByTitle } from "../../features/get-wiki/api/wikis";
 
 export default async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -7,6 +7,5 @@ export default async ({ request }: LoaderFunctionArgs) => {
 
   if (!title) return null;
 
-  const res = await axios.get(`/wikis/${title}`);
-  return res.data;
+  return getWikiByTitle(title);
 };
