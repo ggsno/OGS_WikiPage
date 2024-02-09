@@ -1,11 +1,7 @@
+import { routePath } from "../../shared/consts/routePath";
 import Page from "./Page";
-import Layout from "./Layout";
 
 export default {
-  path: "/wiki/:title",
-  element: (
-    <Layout>
-      <Page />
-    </Layout>
-  ),
+  path: routePath.wiki(":title"),
+  element: <Page />,
 };

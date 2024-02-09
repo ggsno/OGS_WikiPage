@@ -2,9 +2,14 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import AsyncBoundary from "../../shared/async-boundary/AsyncBoundary";
+import FlexCenterContainer from "../../shared/ui/FlexCenterContainer";
+import Header from "../../widgets/header/ui/Header";
+import EditWikiLink from "../../features/edit-wiki/ui/EditWikiLink";
+import { routePath } from "../../shared/consts/routePath";
 
 const Page = AsyncBoundary(() => {
-  const { title } = useParams();
+  const params = useParams();
+  const title = params["title"] as string;
 
   const { data } = useSuspenseQuery({
     queryKey: ["wiki", title],
@@ -34,7 +39,7 @@ const Page = AsyncBoundary(() => {
         return [
           part,
           <Link
-            to={`/wiki/${matchedString}`}
+            to={routePath.wiki(matchedString)}
             className="text-blue-600 hover:underline"
           >
             {matchedString}
@@ -47,10 +52,13 @@ const Page = AsyncBoundary(() => {
 
   return (
     <>
-      <h2 className="text-3xl py-4">{data.title}</h2>
-      <p className="whitespace-pre-wrap">
-        {splitAndInsertLink(data.content, data.title)}
-      </p>
+      <FlexCenterContainer>
+        <Header MenuComponent={<EditWikiLink title={title} />} />
+        <h2 className="text-3xl py-4">{data.title}</h2>
+        <p className="whitespace-pre-wrap">
+          {splitAndInsertLink(data.content, data.title)}
+        </p>
+      </FlexCenterContainer>
     </>
   );
 });

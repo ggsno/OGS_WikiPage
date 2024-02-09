@@ -2,6 +2,7 @@ import axios from "axios";
 import { WikiProps } from "../../../entities/wiki/type";
 import Button from "../../../shared/ui/Button";
 import { useNavigate } from "react-router-dom";
+import { routePath } from "../../../shared/consts/routePath";
 
 type Props = {
   wiki: WikiProps;
@@ -23,7 +24,7 @@ export default function SaveWikiButton({ wiki, isEditMode }: Props) {
           } else {
             await axios.post("/wikis", wiki);
           }
-          navigate(`/wiki/${wiki.title}`);
+          navigate(routePath.wiki(wiki.title));
         }}
       >
         저장
