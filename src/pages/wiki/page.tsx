@@ -33,7 +33,12 @@ const Page = AsyncBoundary(() => {
         if (myTitle === matchedString) return [part, matchedString];
         return [
           part,
-          <Link to={`/wiki/${matchedString}`}>{matchedString}</Link>,
+          <Link
+            to={`/wiki/${matchedString}`}
+            className="text-blue-600 hover:underline"
+          >
+            {matchedString}
+          </Link>,
         ];
       }
       return [part];
@@ -42,9 +47,10 @@ const Page = AsyncBoundary(() => {
 
   return (
     <>
-      <h2>{data.title}</h2>
-      <p>{splitAndInsertLink(data.content, data.title)}</p>
-      <Link to={`/wiki-editor?title=${title}`}>위키 수정하기</Link>
+      <h2 className="text-3xl py-4">{data.title}</h2>
+      <p className="whitespace-pre-wrap">
+        {splitAndInsertLink(data.content, data.title)}
+      </p>
     </>
   );
 });

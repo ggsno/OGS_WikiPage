@@ -1,13 +1,8 @@
-import Page from "./page";
+import Page from "./Page";
 import loader from "./loader";
-import Layout from "./Layout";
 
 export default {
   path: "/wiki-editor",
   loader,
-  element: (
-    <Layout>
-      <Page />
-    </Layout>
-  ),
+  element: <Page />,
 };

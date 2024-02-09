@@ -1,11 +1,15 @@
 import { ReactNode } from "react";
-import Header from "../../widgets/header";
+import Header from "../../widgets/header/ui/Header";
+import FlexCenterContainer from "../../shared/ui/FlexCenterContainer";
+import CreateWikiLink from "../../features/create-wiki/ui/CreateWikiLink";
 
-export default function layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
-      <Header />
-      {children}
+      <FlexCenterContainer>
+        <Header MenuComponent={<CreateWikiLink />} />
+        {children}
+      </FlexCenterContainer>
     </>
   );
 }
