@@ -99,52 +99,69 @@ const mockWikis = [
   },
 ];
 
-type Dictionary = { [key: string]: string[] };
+type DictionaryProps = Record<string, string[]>;
 
-const titleDictionary = (() => {
-  const hasIndex = (dictionary: Dictionary, index: string) => {
-    return dictionary[index];
-  };
+class Dictionary {
+  private dict: DictionaryProps;
 
-  const isDuplicated = (dictionary: Dictionary, newWord: string) => {
-    const index = newWord[0];
-    if (!hasIndex(dictionary, index)) return false;
-    return dictionary[index].includes(newWord);
-  };
+  constructor(contents: Array<{ title: string }>) {
+    this.dict = {};
 
-  const addNewTitle = (dictionary: Dictionary, newWord: string) => {
-    const index = newWord[0];
+    contents.forEach(({ title }) => {
+      this.appendWord(title);
+    }, {});
+  }
 
-    if (isDuplicated(dictionary, newWord)) {
-      return dictionary;
+  get copy() {
+    return { ...this.dict };
+  }
+
+  includesIndex(index: string) {
+    return !!this.dict[index];
+  }
+
+  includesWord(word: string) {
+    const index = word[0];
+    if (!this.includesIndex(index)) return false;
+    return this.dict[index].includes(word);
+  }
+
+  appendWord(word: string) {
+    const index = word[0];
+
+    if (this.includesWord(word)) {
+      return;
     }
 
-    if (hasIndex(dictionary, index)) {
-      return {
-        ...dictionary,
-        [index]: [...dictionary[index], newWord].sort(
-          (a, b) => b.length - a.length
-        ),
-      };
+    if (this.includesIndex(index)) {
+      this.dict[index] = [...this.dict[index], word].sort(
+        (a, b) => b.length - a.length
+      );
+      return;
     }
 
-    return { ...dictionary, [index]: [newWord] };
-  };
+    this.dict[index] = [word];
+  }
 
-  let dict = mockWikis.reduce<Dictionary>((acc, { title }) => {
-    return addNewTitle(acc, title);
-  }, {});
+  updateWord(originWord: string, newWord: string) {
+    const originIndex = originWord[0];
 
-  const getDict = () => ({ ...dict });
+    console.log(this.dict, originIndex);
 
-  const setNewTitle = (newTitle: string) =>
-    (dict = addNewTitle(dict, newTitle));
+    const toDeleteIndex = this.dict[originIndex].findIndex(
+      (e) => e === originWord
+    );
+    if (toDeleteIndex === -1) {
+      console.error("삭제할 인덱스가 없습니다.");
+      return;
+    }
+    this.dict[originIndex].splice(toDeleteIndex, 1);
 
-  return {
-    getDict,
-    setNewTitle,
-  };
-})();
+    this.appendWord(newWord);
+  }
+}
+
+const titleDictionary = new Dictionary(mockWikis);
 
 const handlers: HttpHandler[] = [
   http.get("/wikis", async ({ request }) => {
@@ -185,23 +202,24 @@ const handlers: HttpHandler[] = [
         { status: 404 }
       );
 
-    const dict = titleDictionary.getDict();
+    const titles = wiki.content
+      .split("")
+      .reduce<string[]>((acc, initial, i) => {
+        if (i !== 0 && wiki.content[i - 1] !== " ") return acc;
 
-    const titles = wiki.content.split("").reduce<string[]>((acc, cur, i) => {
-      if (i !== 0 && wiki.content[i - 1] !== " ") return acc;
+        if (!titleDictionary.includesIndex(initial)) {
+          return acc;
+        }
+        const comps = titleDictionary.copy[initial];
 
-      const comps = dict[cur];
+        const title = comps.find(
+          (comp) => comp === wiki.content.slice(i, i + comp.length)
+        );
 
-      if (!comps) return acc;
+        if (!title) return acc;
 
-      const title = comps.find(
-        (comp) => comp === wiki.content.slice(i, i + comp.length)
-      );
-
-      if (!title) return acc;
-
-      return [...acc, title];
-    }, []);
+        return [...acc, title];
+      }, []);
 
     return HttpResponse.json({ ...wiki, containedTitles: titles });
   }),
@@ -221,7 +239,7 @@ const handlers: HttpHandler[] = [
       };
 
       mockWikis.unshift(newWiki);
-      titleDictionary.setNewTitle(newWiki.title);
+      titleDictionary.appendWord(newWiki.title);
 
       return new HttpResponse(null, { status: 201 });
     }
@@ -236,6 +254,7 @@ const handlers: HttpHandler[] = [
         return new HttpResponse("존재하지 않는 위키입니다.", { status: 400 });
       }
 
+      titleDictionary.updateWord(mockWikis[index].title, title);
       mockWikis.splice(index, 1, { id, title, content });
       return new HttpResponse(null, { status: 204 });
     }
