@@ -1,4 +1,6 @@
 export default {
-  wikis: (page: number) => `/wikis?page=${page}`,
-  wikiByTitle: (title: string) => `/wikis/${title}`,
+  getWikis: (page: number) => `/wikis?page=${page}`,
+  putWiki: "/wikis",
+  postWiki: "/wikis",
+  getWikiByTitle: (title: string) => `/wikis/${title}`,
 };

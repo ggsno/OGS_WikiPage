@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import DataTable from "../../../shared/ui/DataTable";
 import useWikiQuery from "../model/useWikiQuery";
+import DivisionLine from "../../../shared/ui/DivisionLine";
 import Margin from "../../../shared/ui/Margin";
 
 const ROW_COUNT_PER_PAGE = 5;
@@ -17,22 +18,24 @@ export default function WikiTable({ page, setPage, handleClickRow }: Props) {
 
   return (
     <>
-      <DataTable>
+      <DataTable rowHeight={12}>
         <DataTable.TotalCount totalCount={totalCount} />
-        <Margin size={4} />
-        <div className="h-52">
+        <Margin size={2} />
+        <DivisionLine />
+        <DataTable.RowContainer rowCount={ROW_COUNT_PER_PAGE}>
           {wikis.map(({ title }, i) => (
             <Fragment key={title + i}>
               <DataTable.Row
                 data={title}
                 onClick={() => {
-                  console.log("hi");
                   handleClickRow(title);
                 }}
               />
             </Fragment>
           ))}
-        </div>
+        </DataTable.RowContainer>
+        <DivisionLine />
+        <Margin size={2} />
         <DataTable.Pagenation
           page={page}
           maxPage={maxPage}

@@ -48,8 +48,6 @@ class Dictionary {
   updateWord(originWord: string, newWord: string) {
     const originIndex = originWord[0];
 
-    console.log(this.dict, originIndex);
-
     const toDeleteIndex = this.dict[originIndex].findIndex(
       (e) => e === originWord
     );
@@ -130,12 +128,12 @@ const handlers: HttpHandler[] = [
     "/wikis",
     async ({ request }) => {
       const { title, content } = await request.json();
-      if (mockWikis.some((wiki) => wiki.title === title)) {
+      if (titleDictionary.includesWord(title)) {
         return new HttpResponse("이미 존재하는 제목입니다.", { status: 400 });
       }
 
       const newWiki = {
-        id: String(Number(mockWikis[mockWikis.length - 1].id) + 1),
+        id: String(Number(mockWikis[0].id) + 1),
         title,
         content,
       };
@@ -151,6 +149,11 @@ const handlers: HttpHandler[] = [
     "wikis",
     async ({ request }) => {
       const { id, title, content } = await request.json();
+
+      if (titleDictionary.includesWord(title)) {
+        return new HttpResponse("이미 존재하는 제목입니다.", { status: 400 });
+      }
+
       const index = mockWikis.findIndex((wiki) => wiki.id === id);
       if (index === -1) {
         return new HttpResponse("존재하지 않는 위키입니다.", { status: 400 });

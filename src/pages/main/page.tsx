@@ -1,10 +1,10 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../../widgets/header/ui/Header";
-import CreateWikiLink from "../../features/create-wiki/ui/CreateWikiLink";
 import WikiTable from "../../features/get-wiki/ui/WikiTable";
 import FlexCenterContainer from "../../shared/ui/FlexCenterContainer";
 import AsyncBoundary from "../../shared/async-boundary/AsyncBoundary";
 import { routePath } from "../../shared/consts/routePath";
+import Button from "../../shared/ui/Button";
 
 export default function Page() {
   const [serachParams, setSerachParams] = useSearchParams();
@@ -14,7 +14,13 @@ export default function Page() {
   return (
     <>
       <FlexCenterContainer>
-        <Header MenuComponent={<CreateWikiLink />} />
+        <Header
+          MenuComponent={
+            <Link to={routePath["wiki-editor"]()}>
+              <Button>위키 작성하기</Button>
+            </Link>
+          }
+        />
         <AsyncBoundary>
           <WikiTable
             page={page}

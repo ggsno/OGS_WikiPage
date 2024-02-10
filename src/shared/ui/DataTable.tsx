@@ -1,31 +1,36 @@
-import { Fragment, ReactNode } from "react";
+import { Fragment, ReactNode, createContext, useContext } from "react";
 
-type RowProps = {
-  data: string;
-} & React.HTMLAttributes<HTMLDivElement>;
+const DataTableContext = createContext(0);
 
-type TotalCountProps = {
-  totalCount: number;
-} & React.HTMLAttributes<HTMLDivElement>;
+/** 컴파운드 컴포넌트: Row, RowContainer, TotalCount, Pagination */
+export default function DataTable(props: {
+  children: ReactNode;
+  rowHeight: number;
+}) {
+  const { children, rowHeight } = props;
 
-type PaginationProps = {
-  page: number;
-  setPage: (page: number) => void;
-  maxPage: number;
-} & React.HTMLAttributes<HTMLDivElement>;
-
-/**
- * 컴파운드 컴포넌트: Row, TotalCount, Pagination
- */
-export default function DataTable({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <DataTableContext.Provider value={rowHeight}>
+        {children}
+      </DataTableContext.Provider>
+    </>
+  );
 }
 
-function Row({ data, ...rest }: RowProps) {
+function Row(
+  props: {
+    data: string;
+  } & React.HTMLAttributes<HTMLDivElement>
+) {
+  const { data, ...rest } = props;
+  const rowHeight = useContext(DataTableContext);
+
   return (
     <div
-      className="flex items-center w-full h-10 px-2
-      hover:bg-slate-50 hover:cursor-pointer"
+      style={{ height: `calc(${rowHeight} * 0.25rem)` }}
+      className={`flex items-center w-full px-2
+      hover:bg-slate-50 hover:cursor-pointer`}
       {...rest}
     >
       {data}
@@ -33,7 +38,24 @@ function Row({ data, ...rest }: RowProps) {
   );
 }
 
-function TotalCount({ totalCount, ...rest }: TotalCountProps) {
+function RowContainer(props: { children: ReactNode; rowCount: number }) {
+  const { children, rowCount } = props;
+  const rowHeight = useContext(DataTableContext);
+
+  return (
+    <div style={{ height: `calc(${rowHeight * rowCount} * 0.25rem)` }}>
+      {children}
+    </div>
+  );
+}
+
+function TotalCount(
+  props: {
+    totalCount: number;
+  } & React.HTMLAttributes<HTMLDivElement>
+) {
+  const { totalCount, ...rest } = props;
+
   return (
     <div className="text-sm px-2" {...rest}>
       {totalCount === 0 && "자료가 없습니다."}
@@ -47,22 +69,30 @@ function TotalCount({ totalCount, ...rest }: TotalCountProps) {
   );
 }
 
-function Pagenation({ page, maxPage, setPage, ...rest }: PaginationProps) {
+function Pagenation(
+  props: {
+    page: number;
+    setPage: (page: number) => void;
+    maxPage: number;
+  } & React.HTMLAttributes<HTMLDivElement>
+) {
+  const { page, maxPage, setPage, ...rest } = props;
+
   return (
     <div {...rest}>
       {Array(maxPage)
         .fill(0)
         .map((_, i) => i + 1)
-        .map((e) => {
+        .map((pageNumber) => {
           return (
-            <Fragment key={`pagination button ${e}`}>
+            <Fragment key={`pagination button ${pageNumber}`}>
               <button
-                onClick={() => setPage(e)}
+                onClick={() => setPage(pageNumber)}
                 className={`px-4 py-1 hover:bg-slate-50 ${
-                  (page === e || (!page && e === 1)) && "font-bold"
+                  page === pageNumber && "font-bold"
                 }`}
               >
-                {e}
+                {pageNumber}
               </button>
             </Fragment>
           );
@@ -72,5 +102,6 @@ function Pagenation({ page, maxPage, setPage, ...rest }: PaginationProps) {
 }
 
 DataTable.Row = Row;
+DataTable.RowContainer = RowContainer;
 DataTable.TotalCount = TotalCount;
 DataTable.Pagenation = Pagenation;
