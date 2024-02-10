@@ -70,6 +70,8 @@ const handlers: HttpHandler[] = [
     const page = url.searchParams.get("page");
     const maxPage = Math.ceil(mockWikis.length / ITEM_COUNT_PER_PAGE);
 
+    mockWikis.sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
+
     if (!page || (mockWikis.length === 0 && page === "1"))
       return new HttpResponse(
         JSON.stringify(mockWikis.slice(0, ITEM_COUNT_PER_PAGE)),
@@ -136,6 +138,8 @@ const handlers: HttpHandler[] = [
         id: Date.now() + "",
         title,
         content,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       mockWikis.push(newWiki);
@@ -150,17 +154,26 @@ const handlers: HttpHandler[] = [
     async ({ request }) => {
       const { id, title, content } = await request.json();
 
-      if (titleDictionary.includesWord(title)) {
-        return new HttpResponse("이미 존재하는 제목입니다.", { status: 400 });
-      }
-
       const index = mockWikis.findIndex((wiki) => wiki.id === id);
       if (index === -1) {
         return new HttpResponse("존재하지 않는 위키입니다.", { status: 400 });
       }
 
-      titleDictionary.updateWord(mockWikis[index].title, title);
-      mockWikis.splice(index, 1, { id, title, content });
+      const originWiki = mockWikis[index];
+
+      const isChangedTitle = originWiki.title !== title;
+
+      if (isChangedTitle && titleDictionary.includesWord(title)) {
+        return new HttpResponse("이미 존재하는 제목입니다.", { status: 400 });
+      }
+
+      titleDictionary.updateWord(originWiki.title, title);
+      mockWikis.splice(index, 1, {
+        ...originWiki,
+        title,
+        content,
+        updatedAt: new Date(),
+      });
       return new HttpResponse(null, { status: 204 });
     }
   ),

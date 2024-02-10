@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { WikiProps } from "../../../entities/wiki/type";
 
-type EditWikiProps = Omit<WikiProps, "containedTitles">;
+type InputWikiProps = Pick<WikiProps, "id" | "title" | "content">;
 
 type WikiStoreProps = {
-  wiki: EditWikiProps;
-  setWiki: (newWiki: EditWikiProps) => void;
+  wiki: InputWikiProps;
+  setWiki: (newWiki: InputWikiProps) => void;
   resetWiki: () => void;
 };
 

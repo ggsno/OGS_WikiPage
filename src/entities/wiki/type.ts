@@ -3,4 +3,6 @@ export type WikiProps = {
   title: string;
   content: string;
   containedTitles: string[];
+  createdAt: Date;
+  updatedAt: Date;
 };
