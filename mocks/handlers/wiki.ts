@@ -70,14 +70,14 @@ const handlers: HttpHandler[] = [
     const page = url.searchParams.get("page");
     const maxPage = Math.ceil(mockWikis.length / ITEM_COUNT_PER_PAGE);
 
-    if (!page)
+    if (!page || (mockWikis.length === 0 && page === "1"))
       return new HttpResponse(
         JSON.stringify(mockWikis.slice(0, ITEM_COUNT_PER_PAGE)),
         { headers: { "x-total-count": String(mockWikis.length) } }
       );
 
     if (maxPage < Number(page))
-      return new HttpResponse(`찾을 수 없는 페이지입니다.`, { status: 404 });
+      return new HttpResponse(`잘못된 페이지입니다.`, { status: 400 });
 
     const startIndex = (Number(page) - 1) * ITEM_COUNT_PER_PAGE;
     const endIndex = startIndex + ITEM_COUNT_PER_PAGE;
@@ -133,12 +133,12 @@ const handlers: HttpHandler[] = [
       }
 
       const newWiki = {
-        id: String(Number(mockWikis[0].id) + 1),
+        id: Date.now() + "",
         title,
         content,
       };
 
-      mockWikis.unshift(newWiki);
+      mockWikis.push(newWiki);
       titleDictionary.appendWord(newWiki.title);
 
       return new HttpResponse(null, { status: 201 });

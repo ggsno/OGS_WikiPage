@@ -1,6 +1,6 @@
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../../widgets/header/ui/Header";
-import WikiTable from "../../features/get-wiki/ui/WikiTable";
+import WikiList from "../../features/get-wiki/ui/WikiList";
 import FlexCenterContainer from "../../shared/ui/FlexCenterContainer";
 import AsyncBoundary from "../../shared/async-boundary/AsyncBoundary";
 import { routePath } from "../../shared/consts/routePath";
@@ -22,7 +22,7 @@ export default function Page() {
           }
         />
         <AsyncBoundary>
-          <WikiTable
+          <WikiList
             page={page}
             setPage={(newPage) => setSerachParams({ page: String(newPage) })}
             handleClickRow={(title) => navigate(routePath.wiki(title))}
