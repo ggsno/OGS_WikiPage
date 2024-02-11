@@ -1,27 +1,33 @@
-import { WikiProps } from "../../../entities/wiki/type";
 import Button from "../../../shared/ui/Button";
+import { InputWikiProps, useWikiStore } from "../model/useWikiStore";
 import { createWiki, editWiki } from "../api/wikis";
-import { useWikiStore } from "../model/useWikiStore";
 
 type Props = {
   isEditMode?: boolean;
-  callback?: (wiki: WikiProps) => void;
+  callback?: (wiki: InputWikiProps) => void;
 };
 
 export default function SaveWikiButton({ isEditMode, callback }: Props) {
-  const { wiki, resetWiki } = useWikiStore(({ wiki, resetWiki }) => ({
-    wiki,
-    resetWiki,
-  }));
+  const [wiki, resetWiki, errorMessage] = useWikiStore((e) => [
+    e.wiki,
+    e.resetWiki,
+    e.errorMessage,
+  ]);
 
   return (
     <>
       <Button
-        disabled={!wiki || wiki.title.length === 0 || wiki.content.length === 0}
+        disabled={
+          !wiki ||
+          wiki.title.length === 0 ||
+          wiki.content.length === 0 ||
+          !!errorMessage
+        }
         onClick={async (e) => {
           e.preventDefault();
-          await (isEditMode && editWiki(wiki));
-          await (!isEditMode && createWiki(wiki));
+
+          isEditMode && (await editWiki(wiki));
+          !isEditMode && (await createWiki(wiki));
           resetWiki();
           callback && callback(wiki);
         }}

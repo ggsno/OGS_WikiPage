@@ -1,12 +1,14 @@
 import { create } from "zustand";
 import { WikiProps } from "../../../entities/wiki/type";
 
-type InputWikiProps = Pick<WikiProps, "id" | "title" | "content">;
+export type InputWikiProps = Pick<WikiProps, "id" | "title" | "content">;
 
 type WikiStoreProps = {
   wiki: InputWikiProps;
   setWiki: (newWiki: InputWikiProps) => void;
   resetWiki: () => void;
+  errorMessage: string | null;
+  setErrorMessage: (newErrorMessage: string | null) => void;
 };
 
 const INIT_WIKI = {
@@ -17,6 +19,8 @@ const INIT_WIKI = {
 
 export const useWikiStore = create<WikiStoreProps>((set) => ({
   wiki: INIT_WIKI,
-  setWiki: (newWiki) => set(() => ({ wiki: newWiki })),
+  setWiki: (wiki) => set(() => ({ wiki })),
   resetWiki: () => set(() => ({ wiki: INIT_WIKI })),
+  errorMessage: null,
+  setErrorMessage: (errorMessage) => set(() => ({ errorMessage })),
 }));

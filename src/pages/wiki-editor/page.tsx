@@ -1,10 +1,10 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
-import Header from "../../widgets/header/ui/Header";
-import SaveWikiButton from "../../features/update-wiki/ui/SaveWikiButton";
-import WikiEditor from "../../features/update-wiki/ui/WikiEditor";
+import { Header } from "../../widgets/header";
+import { SaveWikiButton, WikiEditor } from "../../features/update-wiki";
 import { WikiProps } from "../../entities/wiki/type";
 import FlexCenterContainer from "../../shared/ui/FlexCenterContainer";
 import { routePath } from "../../shared/consts/routePath";
+import escapeUrlKeywords from "../../shared/utils/regular-expressions/escapeUrlKeywords";
 
 export default function Page() {
   const loadedWiki = useLoaderData() as WikiProps | null;
@@ -17,11 +17,13 @@ export default function Page() {
           MenuComponent={
             <SaveWikiButton
               isEditMode={!!loadedWiki}
-              callback={(wiki) => navigate(routePath.wiki(wiki.title))}
+              callback={(wiki) =>
+                navigate(routePath.wiki(escapeUrlKeywords(wiki.title)))
+              }
             />
           }
         />
-        <WikiEditor initWiki={loadedWiki!} />
+        <WikiEditor initWiki={loadedWiki} />
       </FlexCenterContainer>
     </>
   );

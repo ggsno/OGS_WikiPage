@@ -10,7 +10,7 @@ const ROW_COUNT_PER_PAGE = 5;
 type Props = {
   page: number;
   setPage: (newPage: number) => void;
-  handleClickRow: (row: string) => void;
+  handleClickRow: (title: string) => void;
 };
 
 export default function WikiList({ page, setPage, handleClickRow }: Props) {
@@ -31,12 +31,12 @@ export default function WikiList({ page, setPage, handleClickRow }: Props) {
               위키를 작성해주세요!
             </div>
           )}
-          {wikis.map(({ title }, i) => (
-            <Fragment key={title + i}>
+          {wikis.map((wiki) => (
+            <Fragment key={wiki.title}>
               <List.ItemText
-                text={title}
+                text={wiki.title}
                 onClick={() => {
-                  handleClickRow(title);
+                  handleClickRow(wiki.title);
                 }}
               />
             </Fragment>

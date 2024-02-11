@@ -1,10 +1,11 @@
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import Header from "../../widgets/header/ui/Header";
-import WikiList from "../../features/get-wiki/ui/WikiList";
+import { Header } from "../../widgets/header";
+import { WikiList } from "../../features/get-wiki";
 import FlexCenterContainer from "../../shared/ui/FlexCenterContainer";
 import AsyncBoundary from "../../shared/async-boundary/AsyncBoundary";
 import { routePath } from "../../shared/consts/routePath";
 import Button from "../../shared/ui/Button";
+import escapeUrlKeywords from "../../shared/utils/regular-expressions/escapeUrlKeywords";
 
 export default function Page() {
   const [serachParams, setSerachParams] = useSearchParams();
@@ -25,7 +26,9 @@ export default function Page() {
           <WikiList
             page={page}
             setPage={(newPage) => setSerachParams({ page: String(newPage) })}
-            handleClickRow={(title) => navigate(routePath.wiki(title))}
+            handleClickRow={(title) =>
+              navigate(routePath.wiki(escapeUrlKeywords(title)))
+            }
           />
         </AsyncBoundary>
       </FlexCenterContainer>

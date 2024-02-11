@@ -79,7 +79,7 @@ const handlers: HttpHandler[] = [
       );
 
     if (maxPage < Number(page))
-      return new HttpResponse(`잘못된 페이지입니다.`, { status: 400 });
+      return new HttpResponse(`잘못된 페이지 번호입니다.`, { status: 400 });
 
     const startIndex = (Number(page) - 1) * ITEM_COUNT_PER_PAGE;
     const endIndex = startIndex + ITEM_COUNT_PER_PAGE;
@@ -100,11 +100,13 @@ const handlers: HttpHandler[] = [
 
     if (!wiki)
       return new HttpResponse(
-        `해당 제목의 위키를 찾을 수 없습니다. title: [${title}]`,
-        { status: 404 }
+        `해당 위키를 찾을 수 없습니다. title: [${title}]`,
+        {
+          status: 404,
+        }
       );
 
-    const titles = wiki.content
+    const _containedTitles = wiki.content
       .split("")
       .reduce<string[]>((acc, initial, i) => {
         if (i !== 0 && wiki.content[i - 1] !== " ") return acc;
@@ -123,7 +125,9 @@ const handlers: HttpHandler[] = [
         return [...acc, title];
       }, []);
 
-    return HttpResponse.json({ ...wiki, containedTitles: titles });
+    const containedTitles = [...new Set(_containedTitles)];
+
+    return HttpResponse.json({ ...wiki, containedTitles });
   }),
 
   http.post<object, { title: string; content: string }>(
@@ -156,7 +160,9 @@ const handlers: HttpHandler[] = [
 
       const index = mockWikis.findIndex((wiki) => wiki.id === id);
       if (index === -1) {
-        return new HttpResponse("존재하지 않는 위키입니다.", { status: 400 });
+        return new HttpResponse("수정할 위키를 찾지 못했습니다.", {
+          status: 404,
+        });
       }
 
       const originWiki = mockWikis[index];
@@ -174,6 +180,7 @@ const handlers: HttpHandler[] = [
         content,
         updatedAt: new Date(),
       });
+
       return new HttpResponse(null, { status: 204 });
     }
   ),
