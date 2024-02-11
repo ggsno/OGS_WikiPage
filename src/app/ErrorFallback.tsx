@@ -1,8 +1,8 @@
 import { Link, useRouteError } from "react-router-dom";
 import { AxiosError } from "axios";
-import FullScreenContainer from "../../shared/ui/FullScreenContainer";
-import Button from "../../shared/ui/Button";
-import routePath from "../../shared/consts/routePath";
+import FullScreenContainer from "../shared/ui/FullScreenContainer";
+import Button from "../shared/ui/Button";
+import routePath from "../shared/consts/routePath";
 
 export default function ErrorFallback() {
   const error = useRouteError();
