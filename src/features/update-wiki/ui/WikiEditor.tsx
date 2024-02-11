@@ -9,16 +9,20 @@ type Props = {
 const TITLE_MAX_LENGTH = 30;
 
 export default function WikiEditor({ initWiki }: Props) {
-  const [wiki, setWiki, errorMessage, setErrorMessage] = useWikiStore((e) => [
-    e.wiki,
-    e.setWiki,
-    e.errorMessage,
-    e.setErrorMessage,
-  ]);
+  const [wiki, setWiki, errorMessage, setErrorMessage, resetWiki] =
+    useWikiStore((e) => [
+      e.wiki,
+      e.setWiki,
+      e.errorMessage,
+      e.setErrorMessage,
+      e.resetWiki,
+    ]);
 
   useEffect(() => {
-    if (initWiki) setWiki(initWiki);
-  }, [initWiki, setWiki]);
+    initWiki && setWiki(initWiki);
+    !initWiki && resetWiki();
+    setErrorMessage(null);
+  }, [initWiki, setWiki, setErrorMessage, resetWiki]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { routePath } from "../../shared/consts/routePath";
+import routePath from "../../shared/consts/routePath";
 import Page from "./Page";
 import loader from "./loader";
 

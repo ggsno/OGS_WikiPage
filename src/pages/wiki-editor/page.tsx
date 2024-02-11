@@ -3,8 +3,8 @@ import { Header } from "../../widgets/header";
 import { SaveWikiButton, WikiEditor } from "../../features/update-wiki";
 import { WikiProps } from "../../entities/wiki/type";
 import FlexCenterContainer from "../../shared/ui/FlexCenterContainer";
-import { routePath } from "../../shared/consts/routePath";
-import escapeUrlKeywords from "../../shared/utils/regular-expressions/escapeUrlKeywords";
+import routePath from "../../shared/consts/routePath";
+import escapeUrlKeywords from "../../shared/utils/escapeUrlKeywords";
 
 export default function Page() {
   const loadedWiki = useLoaderData() as WikiProps | null;

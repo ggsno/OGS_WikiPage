@@ -1,4 +1,4 @@
-export const routePath = {
+export default {
   main: "/",
   wiki: (title: string) => `/wiki/${title}`,
   "wiki-editor": (title?: string) =>

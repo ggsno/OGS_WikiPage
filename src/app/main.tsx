@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-router-dom";
-import queryClient from "../shared/tanstack-query/queryClient";
+import queryClient from "../shared/config/queryClient";
 import "./styles/global.css";
 
 if (process.env.NODE_ENV === "development") {
@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === "development") {
   await worker.start();
 }
 
-const rootRouter = (await import("./providers/rootRouter")).default;
+const rootRouter = (await import("./routes/rootRouter")).default;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

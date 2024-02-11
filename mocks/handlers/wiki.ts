@@ -157,6 +157,7 @@ const handlers: HttpHandler[] = [
     "wikis",
     async ({ request }) => {
       const { id, title, content } = await request.json();
+      console.log(id, title, content);
 
       const index = mockWikis.findIndex((wiki) => wiki.id === id);
       if (index === -1) {

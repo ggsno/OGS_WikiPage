@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs } from "react-router-dom";
 import { getWikiByTitle } from "../../features/get-wiki";
-import escapeUrlKeywords from "../../shared/utils/regular-expressions/escapeUrlKeywords";
+import escapeUrlKeywords from "../../shared/utils/escapeUrlKeywords";
 
 export default async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { routePath } from "../../../shared/consts/routePath";
+import routePath from "../../../shared/consts/routePath";
 
 export default function Header({
   MenuComponent,

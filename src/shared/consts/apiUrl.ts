@@ -3,4 +3,4 @@ export default {
   putWiki: "/wikis",
   postWiki: "/wikis",
   getWikiByTitle: (title: string) => `/wikis/${title}`,
-};
+} as const;

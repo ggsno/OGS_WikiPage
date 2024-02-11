@@ -2,10 +2,10 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from "../../widgets/header";
 import { WikiList } from "../../features/get-wiki";
 import FlexCenterContainer from "../../shared/ui/FlexCenterContainer";
-import AsyncBoundary from "../../shared/async-boundary/AsyncBoundary";
-import { routePath } from "../../shared/consts/routePath";
+import AsyncBoundary from "../../shared/utils/AsyncBoundary";
+import routePath from "../../shared/consts/routePath";
 import Button from "../../shared/ui/Button";
-import escapeUrlKeywords from "../../shared/utils/regular-expressions/escapeUrlKeywords";
+import escapeUrlKeywords from "../../shared/utils/escapeUrlKeywords";
 
 export default function Page() {
   const [serachParams, setSerachParams] = useSearchParams();

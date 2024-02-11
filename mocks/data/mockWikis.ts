@@ -63,11 +63,11 @@ Array(50)
   .fill(0)
   .forEach((_, i) =>
     mockWikis.push({
-      id: new Date(i) + "",
+      id: new Date(i * 1000) + "",
       title: `test${i}`,
       content: `Content${i}`,
-      createdAt: new Date(i),
-      updatedAt: new Date(i),
+      createdAt: new Date(i * 1000),
+      updatedAt: new Date(i * 1000),
     })
   );
 */

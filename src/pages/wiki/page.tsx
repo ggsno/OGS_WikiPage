@@ -1,12 +1,17 @@
-import { Link, useLoaderData, useParams } from "react-router-dom";
+import {
+  Link,
+  ScrollRestoration,
+  useLoaderData,
+  useParams,
+} from "react-router-dom";
 import { Header } from "../../widgets/header";
 import { WikiProps } from "../../entities/wiki/type";
 import FlexCenterContainer from "../../shared/ui/FlexCenterContainer";
 import Button from "../../shared/ui/Button";
-import { routePath } from "../../shared/consts/routePath";
+import routePath from "../../shared/consts/routePath";
 import ReplaceMatches from "../../shared/utils/ReplaceMatches";
-import getGroupRegExp from "../../shared/utils/regular-expressions/getGroupRegExp";
-import escapeUrlKeywords from "../../shared/utils/regular-expressions/escapeUrlKeywords";
+import getGroupRegExp from "../../shared/utils/getGroupRegExp";
+import escapeUrlKeywords from "../../shared/utils/escapeUrlKeywords";
 
 export default function Page() {
   const params = useParams();
@@ -15,6 +20,7 @@ export default function Page() {
 
   return (
     <>
+      <ScrollRestoration />
       <FlexCenterContainer>
         <Header
           MenuComponent={
